@@ -1,0 +1,23 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    # database_port: 3306
+    database_port: null
+
+#    database_host: nestlebower.cw83yqenjm1v.ap-southeast-1.rds.amazonaws.com
+#    database_name: nestlebower
+#    database_user: npbower
+#    database_password: $$nestleBoWAws123
+
+    database_host: localhost
+    database_name: nestlebower
+    database_user: root
+    database_password: root
+
+    mailer_transport: smtp
+    mailer_host: smtp.gmail.com
+    mailer_user: dexter.loor@gmail.com
+    mailer_password: rocketman88
+    
+    locale: en
+    secret: ThisTokenIsNotSoSecretChangeIt

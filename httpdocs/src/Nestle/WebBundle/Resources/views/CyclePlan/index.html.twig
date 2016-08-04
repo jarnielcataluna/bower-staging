@@ -1,0 +1,181 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+{% set user_role = user.level %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% include 'NestleWebBundle:Misc:notifications.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <h1 class="modal-title">ADD A NEW CYCLE PLAN</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="restos" class="panel">
+                <div class="panel-body" id="bowersTableHolder">
+                    <div class="tableButtons"></div>
+                    <table class="table table-striped table-responsive leadsTable" id="bowerTable">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Link</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Link</th>
+                            <th>Status</th>
+                        </tr>
+                        </tfoot>
+
+                        <tbody>
+
+                        {% for c in cyclePlan %}
+                            <tr id="infoOpen" data-id="{{ c.id }}">
+                                <td>{{ c.title }}</td>
+                                <td>{{ c.date }}</td>
+                                <td>{{ app.request.schemeAndHttpHost }}{{ asset('/uploads/cycleplan/') }}{{ c.link }}</td>
+                                {% if c.status == 1 %}
+                                    <td>Active</td>
+                                {% else %}
+                                    <td>Inactive</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/fileinput.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.table2excel.js') }}"></script>
+
+    <script>
+
+        //        function tableExport() {
+        //            console.log('huhu');
+        //
+        //            var today = new Date();
+        //            today.toISOString().substring(0, 10);
+        //
+        //            $("#bowerTable").table2excel({
+        //                exclude: ".noExl",
+        //                name: "BOW LIST",
+        //                filename: "bow-list-" + today.toISOString().substring(0, 10),
+        //                fileext: ".xls",
+        //                exclude_img: true,
+        //                exclude_links: true,
+        //                exclude_inputs: true
+        //            });
+        //        }
+
+        //        $("#input-csv").fileinput({
+        //            'showUpload': true,
+        //            'previewFileType': 'text',
+        //            'allowedFileExtensions': ['csv'],
+        //            'showPreview': false,
+        //            'showRemove': true,
+        //            'initialPreviewShowDelete': true
+        //        });
+
+
+        $(document).ready(function () {
+            $('#bowerTable').DataTable({
+                oLanguage: {
+                    sEmptyTable: "No records found",
+                    sSearch: ''
+                },
+                oTableTools: {
+                    "sSwfPath": "/admin/swf/copy_csv_xls_pdf.swf",
+                    "aButtons": ["csv"]
+                },
+                iDisplayLength: 10,
+                aLengthMenu: [[25, 50, 100, 250], [25, 50, 100, 250]],
+                bPaginate: true,
+                bLengthChange: true,
+                aaSorting: [[0, 'desc']],
+                fnDrawCallback: function () {
+                    $('tr[id="infoOpen"]').click(function () {
+                        var id = $(this).attr('data-id');
+
+                        $(this).unbind().click();
+                        $(this).bind().click();
+
+                        window.location.href = "/cycle-plan/profile/" + id;
+
+                        $('tr').each(function () {
+                            $(this).unbind().click();
+                        });
+                    });
+
+
+                    $('button[id=importCsv]').click(function () {
+                        $('#myModal').modal('show');
+                    });
+
+
+                },
+
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var select = $('<select class="form-control"><option value="">All</option></select>')
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                            $(this).val()
+                                    );
+
+                                    column
+                                            .search(val ? '^' + val + '$' : '', true, false)
+                                            .draw();
+                                });
+
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                }
+
+            });
+
+
+            // Custom Elements For Filter
+
+            $("div.tableButtons").html('<a href="{{ path('nestle_web_cycle_plan_add') }}" class="btn btn-info">ADD CYCLE PLAN</a>');
+        });
+
+
+    </script>
+{% endblock %}

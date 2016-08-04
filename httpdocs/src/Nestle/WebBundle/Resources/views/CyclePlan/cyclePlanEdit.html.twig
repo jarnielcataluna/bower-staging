@@ -1,0 +1,98 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% set user_role = user.level %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/dataTables.colVis.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% include 'NestleWebBundle:Misc:notifications.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+            <div class="panel">
+                <div class="panel-body">
+
+                    <ol class="breadcrumb">
+                        <li><a href="{{ path('nestle_web_cycle_plan') }}">Cycle Plan</a></li>
+                        <li><a href="{{ path('nestle_web_bower_cycle_plan_profile', {'id': cyclePlan.id}) }}">Cycle Plan
+                                Details</a></li>
+                        <li class="active">Edit</li>
+                    </ol>
+
+                    <form role="form" enctype="multipart/form-data" method="POST">
+                        <div class="modal-header" id="addCyclePlan">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="cp_title">Title</label>
+                                        <input type="text" required="required" name="cp_title" id="cp_title"
+                                               class="form-control input-lg" value="{{ cyclePlan.title }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <label for="cp_status">Status:</label>
+                                    <select name="cp_status" id="cp_status" class="form-control" required>
+                                        <option value="1" {% if cyclePlan.status == 1 %} selected {% endif %}>Active
+                                        </option>
+                                        <option value="0" {% if cyclePlan.status == 0 %} selected {% endif %}>Inactive
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <label for="cp_date">Date</label>
+                                    <input type="date" id="cp_date" name="cp_date" value="{{ cyclePlan.date }}"
+                                           class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="form-group">
+                            <label for="cp_date">Existing File:</label>
+                            <span>{{ app.request.schemeAndHttpHost }}{{ asset('/uploads/cycleplan/') }}{{ cyclePlan.link }}</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cp_file">Upload File</label>
+                            <input name="cp_file" type="file" id="cp_file" class="file" data-show-upload="false"
+                                   data-dFile="">
+                        </div>
+
+                        <button type="submit" class="btn btn-warning pull-right">SAVE</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+
+    <script>
+        $('#flashNotif').fadeOut(5000);
+    </script>
+{% endblock %}
+

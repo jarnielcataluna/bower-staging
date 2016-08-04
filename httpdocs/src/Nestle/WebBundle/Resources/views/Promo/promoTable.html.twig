@@ -1,0 +1,82 @@
+<table class="table table-striped table-responsive leadsTable" id="promotionsTable">
+    <thead>
+    <tr>
+        <th>Promo Name</th>
+        <th>Product Name</th>
+        <th>Promo Product Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+
+        var table = $(document).ready(function () {
+            $('#promotionsTable').DataTable({
+                "dom": '<"searchBox row" f <"startDate col-md-2"> <"endDate col-md-2"> <"region3"> l>  <"row moreFilters collapse" <"lineBreak"> <"startDate col-md-2"> <"endDate col-md-2"> lB > <"row" <"break">> <"row" <"tableButtons">> rt<"bottom"ip><"clear">',
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        postfixButtons: ['colvisRestore']
+                    }
+                ],
+                aLengthMenu: [[25, 50, 100, 250], [25, 50, 100, 250]],
+                oLanguage: {
+                    sSearch: ''
+                },
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ path("nestle_web_promo_table_data") }}',
+                    type: 'GET'
+                },
+                colVis: {
+                    exclude: [0],
+                    restore: "Restore to default",
+                    showAll: "Show all",
+                    showNone: "Show none"
+                },
+                oTableTools: {
+                    "sSwfPath": "/admin/swf/copy_csv_xls_pdf.swf",
+                    "aButtons": ["csv"]
+                },
+                iDisplayLength: 10,
+                bPaginate: true,
+                bLengthChange: true,
+                aaSorting: [[0, 'desc']],
+                bStateSave: true,
+                fnDrawCallback: function () {
+                    $('tr[id="infoOpen"]').click(function () {
+                        var id = $(this).attr('data-id');
+
+                        $(this).unbind().click();
+                        $(this).bind().click();
+
+                        window.location.href = "promo/view/" + id;
+
+                        $('tr').each(function () {
+                            $(this).unbind().click();
+                        });
+                    });
+
+
+                }
+
+            });
+
+
+            // Custom Elements For Filter
+
+            $("div.tableButtons").html('<a href="{{ path('nestle_web_promo_add') }}" class="btn btn-info">ADD PROMO</a>');
+        });
+
+    });
+
+</script>

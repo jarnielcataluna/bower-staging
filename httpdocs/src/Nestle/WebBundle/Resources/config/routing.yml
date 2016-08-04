@@ -1,0 +1,191 @@
+nestle_web_homepage:
+    path:     /
+    defaults: { _controller: NestleWebBundle:Main:index }
+
+nestle_web_leads_data_ajax:
+    path:     /lead-data
+    defaults: { _controller: NestleWebBundle:Main:leadsDataAjax }
+
+nestle_web_leads_data_table_ajax:
+    path:     /lead-data-table
+    defaults: { _controller: NestleWebBundle:Main:leadsDataTableAjax }
+
+nestle_web_leads_info:
+    path:     /sales/transaction/{id}
+    defaults: { _controller: NestleWebBundle:Main:leadInfo }
+
+nestle_web_get_exported_data:
+    path:     /sales/get-export-data
+    defaults: { _controller: NestleWebBundle:Main:getExportData }
+
+#ACCOUNTS
+nestle_web_account_leads:
+    path:     /bow/accounts
+    defaults: { _controller: NestleWebBundle:Accounts:accounts }
+
+nestle_web_account_leads_add:
+    path:     /bow/accounts/add/
+    defaults: { _controller: NestleWebBundle:Accounts:accountsProfileAdd }
+
+nestle_web_account_leads_profile:
+    path:     /bow/accounts/profile/{id}
+    defaults: { _controller: NestleWebBundle:Accounts:accountsProfile }
+
+nestle_web_account_leads_profile_edit:
+    path:     /bow/accounts/profile/edit/{id}
+    defaults: { _controller: NestleWebBundle:Accounts:accountsProfileEdit }
+
+nestle_web_account_leads_table:
+    path:     /bow/accounts/table
+    defaults: { _controller: NestleWebBundle:Accounts:accountsTable }
+
+nestle_web_account_leads_table_data:
+    path:     /bow/accounts/table-data
+    defaults: { _controller: NestleWebBundle:Accounts:accountsTableData }
+
+nestle_web_account_import_data:
+    path:     /bow/accounts/import
+    defaults: { _controller: NestleWebBundle:Accounts:processCsv }
+
+nestle_web_account_delete:
+    path:     /bow/account/delete/{id}
+    defaults: { _controller: NestleWebBundle:Accounts:accountsDelete }
+
+#BOWER
+nestle_web_bower:
+    path:     /bow/bowers
+    defaults: { _controller: NestleWebBundle:Bower:bowers }
+
+nestle_web_bower_add:
+    path:     /bow/bowers/add
+    defaults: { _controller: NestleWebBundle:Bower:bowerAdd }
+
+nestle_web_bower_profile:
+    path:     /bow/bowers/profile/{id}
+    defaults: { _controller: NestleWebBundle:Bower:bowerProfile }
+
+
+
+nestle_web_bower_edit:
+    path:     /bow/bowers/edit/{id}
+    defaults: { _controller: NestleWebBundle:Bower:bowerEdit }
+
+nestle_web_bower_delete:
+    path:     /bower/bowers/delete/{id}
+    defaults: { _controller: NestleWebBundle:Bower:bowerDelete }
+
+nestle_web_bower_table:
+    path:     /bow/bowers/table
+    defaults: { _controller: NestleWebBundle:Bower:bowersTable }
+
+nestle_web_bower_table_data:
+    path:     /bow/bowers/table-data
+    defaults: { _controller: NestleWebBundle:Bower:bowersTableData }
+
+nestle_web_bower_import_data:
+    path:     /bow/bowers/import-data
+    defaults: { _controller: NestleWebBundle:Bower:processCsv }
+
+#Promo
+
+nestle_web_promo:
+    path:   /bow/promo
+    defaults: { _controller: NestleWebBundle:Promo:promos }
+
+nestle_web_promo_table:
+    path:   /bow/promo/table
+    defaults: { _controller: NestleWebBundle:Promo:promoTable }
+
+nestle_web_promo_table_data:
+    path:   /bow/promo/table-data
+    defaults: { _controller: NestleWebBundle:Promo:promoTableData }
+
+nestle_web_promo_add:
+    path:   /bow/promo/add
+    defaults: { _controller: NestleWebBundle:Promo:promoAdd }
+
+nestle_web_promo_view:
+    path:    /bow/promo/view/{id}
+    defaults: { _controller: NestleWebBundle:Promo:promoView }
+
+nestle_web_promo_edit:
+    path:   /bow/promo/edit/{id}
+    defaults: { _controller: NestleWebBundle:Promo:promoEdit }
+
+nestle_web_promo_delete:
+    path:   /bow/promo/delete/{id}
+    defaults: { _controller: NestleWebBundle:Promo:promoDelete }
+
+nestle_web_promo_import:
+    path:   /bow/promo/import-data
+    defaults: { _controller: NestleWebBundle:Promo:processCsv }
+
+#Products
+nestle_web_products:
+    path:     /bow/products
+    defaults: { _controller: NestleWebBundle:Product:products }
+
+nestle_web_product_table:
+    path:   /bow/product/table
+    defaults: { _controller: NestleWebBundle:Product:productTable }
+
+nestle_web_product_table_data:
+    path:   /bow/product/table-data
+    defaults: { _controller: NestleWebBundle:Product:productTableData }
+
+nestle_web_product_import_data:
+    path:   /bow/product/import-data
+    defaults: { _controller: NestleWebBundle:Product:processCsv }
+
+nestle_web_product_add:
+    path:     /bow/products/add
+    defaults: { _controller: NestleWebBundle:Product:productAdd }
+
+nestle_web_product_edit:
+    path:    /bow/products/edit/{id}
+    defaults: { _controller: NestleWebBundle:Product:productEdit }
+
+nestle_web_product_view:
+    path:    /bow/product/view/{id}
+    defaults: { _controller: NestleWebBundle:Product:productView }
+
+nestle_web_product_delete:
+    path:   /bow/product/delete/{id}
+    defaults: { _controller: NestleWebBundle:Product:productDelete }
+
+nestle_web_distributor_list:
+    path:   /bow/distributor
+    defaults: { _controller: NestleWebBundle:Distributor:distributorView }
+
+nestle_web_distributor_fetch_list:
+    path:   /bow/distributor/get
+    defaults: { _controller: NestleWebBundle:Distributor:distributorList }
+
+nestle_web_distributor_manage:
+    path:   /bow/distributor/manage
+    defaults: { _controller: NestleWebBundle:Distributor:distributorManage }
+
+nestle_web_distributor_delete:
+    path:   /bow/distributor/delete
+    defaults: { _controller: NestleWebBundle:Distributor:distributorDelete }
+
+#Cycle Plan
+nestle_web_cycle_plan:
+    path:     /cycle-plan
+    defaults: { _controller: NestleWebBundle:CyclePlan:index }
+
+nestle_web_cycle_plan_add:
+    path:     /cycle-plan/add
+    defaults: { _controller: NestleWebBundle:CyclePlan:addCyclePlan }
+
+nestle_web_bower_cycle_plan_profile:
+    path:     /cycle-plan/profile/{id}
+    defaults: { _controller: NestleWebBundle:CyclePlan:profileCyclePlan }
+
+nestle_web_cycle_plan_edit:
+    path:     /cycle-plan/edit/{id}
+    defaults: { _controller: NestleWebBundle:CyclePlan:editCyclePlan }
+
+nestle_web_cycle_plan_delete:
+    path:     /cycle-plan/delete/{id}
+    defaults: { _controller: NestleWebBundle:CyclePlan:deleteCyclePlan }

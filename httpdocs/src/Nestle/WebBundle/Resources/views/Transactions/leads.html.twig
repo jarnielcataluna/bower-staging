@@ -1,0 +1,224 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% set user_role = user.level %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/dataTables.colVis.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all" />
+{% endblock %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<section class="status">
+				<span class="value">{{ txns }}</span>
+				<span class="valLabel">TRANSACTION{% if txns != 1 %}S{% endif %}</span>
+			</section>
+		</div>
+	</div>
+
+	<div class="row filters">
+		<div class="col-md-12">
+			
+			<div class="panel">
+				<div class="panel-body">
+
+					<div class="col-sm-4 col-md-3">
+						<select class="form-control pad-down" id="bowerId">
+                            <option value="">Bower</option>
+                            {% if bowers %}
+                            	{% for bower in bowers %}
+                            		<option value="{{ bower.id }}">{{ bower.fname }} {{ bower.lname }}</option>
+                            	{% endfor %}
+                            {% endif %}
+                        </select>
+					</div>
+
+					<div class="col-sm-4 col-md-3">
+						<div class="input-group pad-down">
+                            <span id="basic-addon1" class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <input class="form-control" type="text" name="startDate" id="startDate" aria-describedby="basic-addon1" placeholder="Start Date">
+                        </div>
+					</div>
+
+					<div class="col-sm-4 col-md-3">
+						<div class="input-group pad-down">
+                            <span id="basic-addon1" class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <input class="form-control" type="text" name="endDate" id="endDate" aria-describedby="basic-addon1" placeholder="End Date">
+                        </div>
+					</div>
+
+					<div class="col-sm-4 col-md-1">
+						<a href="#" class="btn btn-warning" id="filterNow">FILTER</a>
+					</div>
+
+                    <div class="col-sm-4 col-md-2">
+                        <a href="#" class="btn btn-warning" id="exportCsv">EXPORT DATA</a>
+                        <a href="" class="hidden" id="triggerDataModal" data-toggle="modal" data-target="#myModal"></a>
+                    </div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+    {# <div class="row hidden">
+        <div class="col-md-12">
+            {% include 'NestleWebBundle:Transactions:exportTable.html.twig' %}
+        </div>
+    </div> #}
+
+	<div class="row">
+        <div class="col-md-12">
+            
+            <div id="restos" class="panel">
+                <div class="panel-body" id="tableHolder">
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title" id="myModalLabel">Download BOW Sales Data?</h3>
+          </div>
+          <div class="modal-body hidden" id="exportTableData"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" id="closeData" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="downloadCsv">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fountainG">
+        <div id="fountainG_1" class="fountainG"></div>
+        <div id="fountainG_2" class="fountainG"></div>
+        <div id="fountainG_3" class="fountainG"></div>
+        <div id="fountainG_4" class="fountainG"></div>
+        <div id="fountainG_5" class="fountainG"></div>
+        <div id="fountainG_6" class="fountainG"></div>
+        <div id="fountainG_7" class="fountainG"></div>
+        <div id="fountainG_8" class="fountainG"></div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+
+
+
+    <script>
+        refreshTable();
+
+        function refreshTable() {
+
+
+        	var _bow = $('#bowerId').val();
+            var start = $("#startDate").val();
+            var end = $("#endDate").val();
+
+            console.log(start);
+            console.log(end);
+
+            if (_bow == '') {
+            	_bow = "{{ bow }}";
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "{{ path('nestle_web_leads_data_ajax') }}",
+                data: {
+                	bow: _bow,
+                    startDate: start,
+                    endDate: end
+                },
+                success: function(html) {
+                    $('#tableHolder').html(html);
+                }
+            });
+        }
+
+        $('#filterNow').click(function(e) {
+        	e.preventDefault();
+
+        	refreshTable();
+        });
+    </script>
+
+    <script>
+
+        $('#startDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy-mm-dd',
+            onClose: function(selectedDate) {
+                $("#endDate").datepicker("option", "minDate", selectedDate);
+            }
+        });
+        
+        $('#endDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy-mm-dd',
+            onClose: function(selectedDate) {
+                $("#startDate").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $('#exportCsv').click(function(e) {
+            e.preventDefault();
+            $('#fountainG').show();
+            
+            var start = $("#startDate").val();
+            var end = $("#endDate").val();
+
+            $.ajax({
+                url: "{{ path('nestle_web_get_exported_data') }}",
+                type: "POST",
+                data: {
+                    startDate: start,
+                    endDate: end
+                },
+                success: function(html) {
+                    $('#fountainG').hide();
+                    $('#exportTableData').html(html);
+
+                    $('#triggerDataModal').trigger('click');
+                    $('#downloadCsv').click(function(e) {
+                        e.preventDefault();
+
+                        var d = new Date();
+                        var strDate = d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();
+                        var fileName = 'dataExport_'+strDate+'.xls';
+
+                        tablesToExcel(['submissionLevel','transactionLevel'], ['Submission Level','Transaction Level'], fileName, 'Excel');
+
+                        $('#exportTableData').html('');
+                        $('#closeData').trigger('click');
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,3 @@
+nestle_core_homepage:
+    path:     /
+    defaults: { _controller: NestleCoreBundle:Core:index }

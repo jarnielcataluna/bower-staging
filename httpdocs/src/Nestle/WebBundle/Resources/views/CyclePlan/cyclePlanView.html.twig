@@ -1,0 +1,113 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/bootstrap-colorpicker.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+{% set user_role = user.level %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% include 'NestleWebBundle:Misc:notifications.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+            <div class="panel">
+                <div class="panel-body">
+
+                    <ol class="breadcrumb">
+                        <li><a href="{{ path('nestle_web_bower') }}">Bower</a></li>
+                        <li class="active">Profile</li>
+                    </ol>
+
+                    <div class="modal-header" id="addProfile">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="">Title:</label>
+                                    <span>{{ cyclePlan.title }}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="">Status:</label>
+                                    {% if cyclePlan.status == 1 %}
+                                        <span>Active</span>
+                                    {% else %}
+                                        <span>Inactive</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="">Date:</label>
+                                    <span>{{ cyclePlan.date }}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="">Link:</label>
+                                    <span>{{ app.request.schemeAndHttpHost }}{{ asset('/uploads/cycleplan/') }}{{ cyclePlan.link }}</span>
+                                </div>
+                            </div>
+                            <br/>
+
+                            <div class="form-footer">
+                                <a href="{{ path('nestle_web_cycle_plan_edit', {'id':  cyclePlan.id }) }}"
+                                   class="btn btn-warning">Edit</a>
+                                <a class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="">
+                                    Delete
+                                </a>
+
+                            </div>
+
+                            <div class="modal fade" id="myModal" role="dialog">
+                                <div class="modal-dialog modal-md">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <a type="button" class="close" data-dismiss="modal">&times;</a>
+                                            <h4 class="modal-title">DELETE CYCLE PLAN</h4>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete "{{ cyclePlan.title }}" record?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="{{ path('nestle_web_cycle_plan_delete', {'id': cyclePlan.id}) }}"
+                                               class="btn btn-danger">Delete</a>
+                                            <button class="btn btn-default" data-dismiss="modal">Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+    {% block javascript %}
+
+        <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+        <script src="{{ asset('js/bootstrap-colorpicker.js') }}"></script>
+        <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+        <script src="{{ asset('js/colorpicker.js') }}"></script>
+        <script src="{{ asset('js/colorpicker-color.js') }}"></script>
+
+        <script>
+
+
+        </script>
+
+
+    {% endblock %}
+

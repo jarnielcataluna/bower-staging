@@ -1,0 +1,107 @@
+<table class="table table-striped table-responsive leadsTable" id="bowerTable">
+    <thead>
+    <tr>
+        <th>Username</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Area</th>
+        <th>City</th>
+        <th>Province</th>
+        <th>Region</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tfoot>
+    <tr>
+        <th>Username</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Area</th>
+        <th>City</th>
+        <th>Province</th>
+        <th>Region</th>
+        <th>Status</th>
+    </tr>
+    </tfoot>
+
+    <tbody
+    <tr>
+        {% for d in data %}
+        <td>{{ d.username }}</td>
+        <td>{{ d.lname }}</td>
+        <td>{{ d.fname }}</td>
+        <td>{{ d.area }}</td>
+        <td>{{ d.city }}</td>
+        <td>{{ d.province }}</td>
+        <td>{{ d.region }}</td>
+        <td>{{ d.status }}</td>
+        {% endfor %}
+    </tr>
+    </tbody>
+</table>
+<script>
+    $(function () {
+        $(document).ready(function () {
+             $('#bowerTable').DataTable({
+                "dom": '<"searchBox row" f <"region4"> l>  <"row moreFilters collapse" <"lineBreak"> <"startDate col-md-2"> <"endDate col-md-2"> lB > <"row" <"break">> <"row" <"tableButtons">> rt<"bottom"ip><"clear">',
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        postfixButtons: ['colvisRestore']
+                    }
+                ],
+                oLanguage: {
+                    sEmptyTable: "No records found",
+                    sSearch: ''
+                },
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ path("nestle_web_bower_table_data") }}',
+                    type: 'GET'
+                },
+                colVis: {
+                    exclude: [0],
+                    restore: "Restore to default",
+                    showAll: "Show all",
+                    showNone: "Show none"
+                },
+                oTableTools: {
+                    "sSwfPath": "/admin/swf/copy_csv_xls_pdf.swf",
+                    "aButtons": ["csv"]
+                },
+                iDisplayLength: 10,
+                aLengthMenu: [[25, 50, 100, 250], [25, 50, 100, 250]],
+                bPaginate: true,
+                bLengthChange: true,
+                aaSorting: [[0, 'desc']],
+                fnDrawCallback: function () {
+                    $('tr[id="infoOpen"]').click(function () {
+                        var id = $(this).attr('data-id');
+
+                        $(this).unbind().click();
+                        $(this).bind().click();
+
+                        window.location.href = "bowers/profile/" + id;
+
+                        $('tr').each(function () {
+                            $(this).unbind().click();
+                        });
+                    });
+
+
+                    $('button[id=importCsv]').click(function () {
+                        $('#myModal').modal('show');
+                    });
+                }
+
+            });
+
+
+            // Custom Elements For Filter
+
+            $("div.tableButtons").html('<a href="{{ path('nestle_web_bower_add') }}" class="btn btn-info">ADD BOWER</a><button class="btn btn-info" data-toggle="modal" data-target="#myModal">IMPORT CSV</button><button class="btn btn-info">EXPORT CSV</button>');
+        });
+    });
+
+</script>

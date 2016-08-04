@@ -1,0 +1,38 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+    bower_core.login_authentication.class: Nestle\CoreBundle\AuthenticationHandler\LoginHandler
+    bower_core.logout_authentication.class: Nestle\CoreBundle\AuthenticationHandler\LogoutHandler
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    propel.security.acl.connection:
+        class: PropelPDO
+        factory_class: Propel
+        factory_method: getConnection
+        arguments:
+            - "acl"
+            
+    login_handler:
+        class: %bower_core.login_authentication.class%
+        arguments: [ @router, @security.context ]
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
+    
+    logout_handler:
+        class: %bower_core.logout_authentication.class%
+        arguments: [ @router, @security.context ]
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

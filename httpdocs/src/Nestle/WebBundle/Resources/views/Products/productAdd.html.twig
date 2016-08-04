@@ -1,0 +1,381 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/bootstrap-colorpicker.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+{% set user_role = user.level %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% include 'NestleWebBundle:Misc:notifications.html.twig' %}
+        </div>
+    </div>
+
+
+    <div class="row">
+		<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+			<div class="panel">
+				<div class="panel-body">
+
+					<ol class="breadcrumb">
+						<li><a href="{{ path('nestle_web_products') }}">Product</a></li>
+						<li class="active">Add</li>
+					</ol>
+                    <form role="form" enctype="multipart/form-data" method="POST">
+					<div class="modal-header" id="addProfile">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-sm-12">
+									<label for="product_name">Product Name:</label>
+						    		<input type="text" required="required" name="product_name" id="product_name" class="form-control input-lg">
+								</div>
+							</div>
+						 </div>
+						 <div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="price">Selling Price:</label>
+						    		    <input type="text" required="required" name="price" id="price" class="form-control ">
+									</div>
+								</div>
+								{#<div class="col-sm-6">#}
+									{#<div class="form-group">#}
+										{#<label for="vat">VAT:</label>#}
+						    		    {#<input type="text" required="required" name="vat" id="vat" class="form-control">#}
+									{#</div>#}
+								{#</div>#}
+							</div>
+					</div>
+
+					<div class="modal-body restaurantProfile" id="addProfile">
+
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label for="status">Status:</label>
+										<select name="status" id="status" class="form-control">
+											<option value="1">Active</option>
+											<option value="0">Inactive</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label for="type">Type:</label>
+										<select name="type" class="form-control">
+											<option value="1">Product Item</option>
+											<option value="2">Promo Item</option>
+											<option value="3">Promo Item (Virtual Packs)</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label for="sku">SKU CODE:</label>
+										<input type="text" required="required" name="sku" id="sku" class="form-control">
+									</div>
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="category">Category:</label>
+										<select name="category" id="category" class="form-control">
+											{% if category %}
+                                                {% for c in category %}
+                                                    <option value="{{ c.id }}">{{ c.productCategory }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="brand">Brand:</label>
+										<select name="brand" id="brand" class="form-control">
+											{% if brand %}
+                                                {% for b in brand %}
+                                                    <option value="{{ b.id }}">{{ b.brand }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+										</select>
+									</div>
+								</div>
+							</div>
+
+
+							<hr>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+									<label>Image</label>
+									<div class="input-group image-preview" id="image-preview">
+						                <input type="text" class="form-control image-preview-filename" disabled="disabled">
+						                <span class="input-group-btn">
+						                    <!-- image-preview-button button -->
+						                    <button type="button" class="btn btn-default image-preview-button" style="display:none;">
+						                        <span class="glyphicon glyphicon-picture"></span> Preview
+						                    </button>
+
+						                    <!-- image-preview-clear button -->
+						                    <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
+						                        <span class="glyphicon glyphicon-remove"></span> Clear
+						                    </button>
+
+						                    <!-- image-preview-input -->
+						                    <div class="btn btn-default image-preview-input">
+						                        <span class="glyphicon glyphicon-folder-open"></span>
+						                        <span class="image-preview-input-title">Browse</span>
+						                        <input type="file" required="required" accept="image/png" name="image"/>
+						                    </div>
+						                </span>
+						            </div><!-- /input-group image-preview [TO HERE]-->
+								</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>Thumbnail</label>
+										<div class="input-group image-preview2" id="image-preview">
+						                	<input type="text" class="form-control image-preview2-filename" disabled="disabled">
+						                	<span class="input-group-btn">
+						                    <!-- image-preview-button button -->
+							                    <button type="button" class="btn btn-default image-preview2-button" style="display:none;">
+							                        <span class="glyphicon glyphicon-picture"></span> Preview
+							                    </button>
+
+							                    <!-- image-preview-clear button -->
+							                    <button type="button" class="btn btn-default image-preview2-clear" style="display:none;">
+							                        <span class="glyphicon glyphicon-remove"></span> Clear
+							                    </button>
+
+							                    <!-- image-preview-input -->
+							                    <div class="btn btn-default image-preview2-input">
+						                        	<span class="glyphicon glyphicon-folder-open"></span>
+						                        	<span class="image-preview2-input-title">Browse</span>
+						                        	<input type="file" accept="image/png" name="thumbnail"/>
+							                    </div>
+						                	</span>
+						            	</div><!-- /input-group image-preview [TO HERE]-->
+						            </div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>Background color</label>
+										<div class="input-group demo2">
+	    									<input type="text" name="color" required="required" value="" class="form-control" />
+	    									<span class="input-group-addon"><i></i></span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>Font color</label>
+										<div class="input-group demo2">
+	    									<input type="text" name="font" required="required" class="form-control" />
+	    									<span class="input-group-addon"><i></i></span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+								<hr>
+								<button type="submit" class="btn btn-warning pull-right">Submit</button>
+
+						</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-colorpicker.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('js/colorpicker.js') }}"></script>
+    <script src="{{ asset('js/colorpicker-color.js') }}"></script>
+
+    <script>
+        $('#flashNotif').fadeOut(2500);
+    </script>
+
+
+    <script>
+        function closePreview() {
+            $('.image-preview').popover('hide');
+            // Need to improve the onhover event from here
+            //$('.image-preview').hover(
+            //    function () {
+            //       $('.image-preview').popover('show');
+            //    },
+            //     function () {
+            //       $('.image-preview').popover('hide');
+            //    }
+            //);
+        }
+
+        $(document).ready(function () {
+            // Set the close button
+            var closebtn = $('<button/>', {
+                type: "button",
+                text: 'x',
+                id: 'close-preview',
+                style: 'font-size: initial;'
+            });
+            closebtn.attr("class", "close pull-right");
+            closebtn.attr("onclick", "closePreview();");
+            // Set the popover default content
+            $('.image-preview').popover({
+                trigger: 'manual',
+                html: true,
+                title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
+                content: 'Loading...',
+                placement: 'bottom'
+            });
+            // Set the clear onclick function
+            $('.image-preview-clear').click(function () {
+                $('.image-preview').popover('hide');
+                $('.image-preview-filename').val("");
+                $('.image-preview-clear').hide();
+                $('.image-preview-button').hide();
+                $('.image-preview-input input:file').val("");
+                $(".image-preview-input-title").text("Browse");
+            });
+
+            $('.image-preview-button').on('click', function () {
+                $('.image-preview').popover('toggle');
+            });
+        });
+
+        $(function () {
+            $(".image-preview-input input:file").change(function () {
+                // Create the preview image
+                var img = $('<img/>', {
+                    id: 'dynamic',
+                    width: 250,
+                    height: 230
+                });
+                var file = this.files[0];
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $(".image-preview-input-title").text("Change");
+                    $(".image-preview-clear").show();
+                    $(".image-preview-button").show();
+                    $(".image-preview-filename").val(file.name);
+                    // Set preview image into the popover data-content
+                    img.attr('src', e.target.result);
+                    $(".image-preview").attr("data-content", $(img)[0].outerHTML).popover("show");
+                }
+                reader.readAsDataURL(file);
+            });
+        });
+
+    </script>
+
+    <script>
+        function closePreview2() {
+            $('.image-preview2').popover('hide');
+            // Need to improve the onhover event from here
+            //$('.image-preview').hover(
+            //    function () {
+            //       $('.image-preview').popover('show');
+            //    },
+            //     function () {
+            //       $('.image-preview').popover('hide');
+            //    }
+            //);
+        }
+
+        $(document).ready(function () {
+            // Set the close button
+            var closebtn = $('<button/>', {
+                type: "button",
+                text: 'x',
+                id: 'close-preview',
+                style: 'font-size: initial;'
+            });
+            closebtn.attr("class", "close pull-right");
+            closebtn.attr("onclick", "closePreview2();");
+            // Set the popover default content
+            $('.image-preview2').popover({
+                trigger: 'manual',
+                html: true,
+                title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
+                content: 'Loading...',
+                placement: 'bottom'
+            });
+            // Set the clear onclick function
+            $('.image-preview2-clear').click(function () {
+                $('.image-preview2').popover('hide');
+                $('.image-preview2-filename').val("");
+                $('.image-preview2-clear').hide();
+                $('.image-preview2-button').hide();
+                $('.image-preview2-input input:file').val("");
+                $(".image-preview2-input-title").text("Browse");
+            });
+
+            $('.image-preview2-button').on('click', function () {
+                $('.image-preview2').popover('toggle');
+            });
+        });
+
+        $(function () {
+            $(".image-preview2-input input:file").change(function () {
+                // Create the preview image
+                var img = $('<img/>', {
+                    id: 'dynamic',
+                    width: 250,
+                    height: 230
+                });
+                var file = this.files[0];
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $(".image-preview2-input-title").text("Change");
+                    $(".image-preview2-clear").show();
+                    $(".image-preview2-button").show();
+                    $(".image-preview2-filename").val(file.name);
+                    // Set preview image into the popover data-content
+                    img.attr('src', e.target.result);
+                    $(".image-preview2").attr("data-content", $(img)[0].outerHTML).popover("show");
+                }
+                reader.readAsDataURL(file);
+            });
+        });
+
+    </script>
+
+    <script>
+        $(function () {
+            $('.demo2').colorpicker();
+        });
+    </script>
+
+    <script>
+        $('.input-group.date').datepicker({
+            orientation: "bottom auto"
+        });
+    </script>
+    <script>
+        $('#sandbox-container .input-group.date').datepicker({});
+    </script>
+{% endblock %}
+

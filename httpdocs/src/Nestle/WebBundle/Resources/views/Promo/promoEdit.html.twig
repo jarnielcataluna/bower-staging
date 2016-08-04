@@ -1,0 +1,216 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% set user_role = user.level %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/dataTables.colVis.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% include 'NestleWebBundle:Misc:notifications.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+            <div class="panel">
+                <div class="panel-body">
+
+                    <ol class="breadcrumb">
+                        <li><a href="{{ path('nestle_web_promo') }}">Promotions</a></li>
+                        <li class="active">Add</li>
+                    </ol>
+
+                    <form role="form" method="POST">
+                        <div class="modal-header" id="addProfile">
+                            <div class="form-group">
+                                <label for="pwd" for="promo">Promo Name:</label>
+                                <input type="text" name="name" id="name" class="form-control input-lg"
+                                       value="{{ promo.name }}">
+                            </div>
+                        </div>
+
+                        <div class="modal-body restaurantProfile" id="addProfile">
+
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="desc">Description:</label>
+                                        <textarea class="form-control" id="desc" name="desc"
+                                                  rows="3">{{ promo.description }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="status">Status:</label>
+                                        <select class="form-control" id="status" name="status">
+                                            <option value="1" {% if promo.status == 1 %} selected {% endif %}>Active
+                                            </option>
+                                            <option value="2" {% if promo.status == 2 %} selected {% endif %}>Inactive
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="region">Region:</label>
+                                        <select class="form-control" id="region" name="region">
+                                            <option value="0" {% if promo.status == 0 %} selected {% endif %}>All
+                                            </option>
+                                            {% for r in regions %}
+                                                <option value="{{ r.id }}" {% if promo.status == r.id %} selected {% endif %}>{{ r.region }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="start">Start Date:</label>
+
+                                        <div class="input-group date">
+                                            <input type="text" name="start" value="{{ rule.startDate }}" id="start"
+                                                   class="form-control"><span
+                                                    class="input-group-addon"><i
+                                                        class="glyphicon glyphicon-th"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="end">End Date:</label>
+
+                                        <div class="input-group date">
+                                            <input type="text" id="end" name="end" value="{{ rule.endDate }}"
+                                                   class="form-control"><span
+                                                    class="input-group-addon"><i
+                                                        class="glyphicon glyphicon-th"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <hr>
+
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="product_id">Product:</label>
+                                        <select name="product_id" id="product_id" class="form-control">>
+                                            {% if product %}
+                                                {% for p in product %}
+                                                    <option value="{{ p.id }}" {% if p.id == rule.productId %} selected {% endif %}>{{ p.name }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="qualifier">Qty. Qualify:</label>
+
+                                        <div class="input-group spinner2">
+                                            <input type="text" name="qualifier" id="qualifier"
+                                                   value="{{ rule.qtyToQualify }}" class="form-control">
+
+                                            <div class="input-group-btn-vertical">
+                                                <button class="btn btn-default" type="button"><i
+                                                            class="fa fa-caret-up"></i></button>
+                                                <button class="btn btn-default" type="button"><i
+                                                            class="fa fa-caret-down"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="product_promo_id">Promo Product:</label>
+                                        <select id="product_promo_id" name="product_promo_id" id="product_promo_id"
+                                                class="form-control">
+                                            {% if promoproduct %}
+                                                {% for pp in promoproduct %}
+                                                    <option value="{{ pp.id }}" {% if pp.id == rule.promoProductId %} selected {% endif %}>{{ pp.name }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="free">Qty. Free:</label>
+
+                                        <div class="input-group spinner3">
+                                            <input type="text" name="free" id="free" value="{{ rule.qtyFree }}"
+                                                   class="form-control">
+
+                                            <div class="input-group-btn-vertical">
+                                                <button class="btn btn-default" type="button"><i
+                                                            class="fa fa-caret-up"></i></button>
+                                                <button class="btn btn-default" type="button"><i
+                                                            class="fa fa-caret-down"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <button type="submit" class="btn btn-warning pull-right">Submit</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+
+    <script>
+        $('#flashNotif').fadeOut(2500);
+
+
+        $('.spinner2 .btn:first-of-type').on('click', function () {
+            $('.spinner2 input').val(parseInt($('.spinner2 input').val(), 10) + 1);
+        });
+        $('.spinner2 .btn:last-of-type').on('click', function () {
+            $('.spinner2 input').val(parseInt($('.spinner2 input').val(), 10) - 1);
+        });
+
+        $('.spinner3 .btn:first-of-type').on('click', function () {
+            $('.spinner3 input').val(parseInt($('.spinner3 input').val(), 10) + 1);
+        });
+        $('.spinner3 .btn:last-of-type').on('click', function () {
+            $('.spinner3 input').val(parseInt($('.spinner3 input').val(), 10) - 1);
+        });
+
+        $('.input-group.date').datepicker({
+            orientation: 'bottom auto',
+            format: 'yyyy-mm-dd'
+        });
+
+    </script>
+{% endblock %}
+

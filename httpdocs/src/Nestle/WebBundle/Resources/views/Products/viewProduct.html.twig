@@ -1,0 +1,175 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% set user_role = user.level %}
+
+{% block stylesheets %}
+	<link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+	<link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+		{% include 'NestleWebBundle:Misc:notifications.html.twig' %}
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+			<div class="panel">
+				<div class="panel-body">
+					<ol class="breadcrumb">
+						<li><a href="{{ path('nestle_web_products') }}">Product</a></li>
+						<li class="active">Add</li>
+					</ol>
+					<div class="modal-header" id="addProfile">
+
+						<div class="form-group">
+							<div class="row">
+								<div class="col-sm-12">
+									<label for="product_name">Product Name:</label>
+									<span>{{ product.name }}</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="price">Selling Price:</label>
+									<span>&#8369 {{ product.basePrice|number_format(2, '.', ',') }}</span>
+								</div>
+							</div>
+							{#<div class="col-sm-6">#}
+								{#<div class="form-group">#}
+									{#<label for="vat">VAT:</label>#}
+									{#<span>&#8369 {{ product.vat|number_format(2, '.', ',') }}</span>#}
+								{#</div>#}
+							{#</div>#}
+						</div>
+					</div>
+
+					<div class="modal-body restaurantProfile" id="addProfile">
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="status">Status:</label>
+									{% if product.status == 1 %}
+										<span>Active</span>
+									{% else %}
+										<span>Inactive</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="type">Type:</label>
+									{% if product.type == 1 %}
+										<span>Product</span>
+									{% else %}
+										<span>Promo</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="sku">SKU CODE:</label>
+									<span>{{ product.sku }}</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="category">Category:</label>
+									<span>{{ product_category }}</span>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="brand">Brand:</label>
+									<span>{{ product_brand }}</span>
+								</div>
+							</div>
+						</div>
+
+
+						<hr>
+
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Image :</label>
+									<img class="img-responsive" src="https://s3-ap-southeast-1.amazonaws.com/nestle-bower-image-hosting/product-images/{{ product.image }}">
+								</div>
+							</div>
+
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Thumbnail :</label>
+									{% if product.thumbnail %}
+									<img class="img-responsive" src="https://s3-ap-southeast-1.amazonaws.com/nestle-bower-image-hosting/product-images/{{ product.thumbnail }}">
+									{% else %}
+
+									{% endif %}
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Background Color :</label>
+									<input type="text" readonly="true" style="background: {{ product.backgroundcolor }}" value="{{ product.backgroundcolor }}">
+								</div>
+							</div>
+
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Font Color :</label>
+									<input type="text" readonly="true" style="background: {{ product.fontcolor }}" value="{{ product.fontcolor }}">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-footer">
+						<a href="{{ path('nestle_web_product_edit', {'id':  product.id }) }}" class="btn btn-warning">Edit</a>
+						<button class="btn btn-danger" data-toggle="modal"  data-target="#myModal" type="button" onclick="">Delete</button>
+					</div>
+					<div class="modal fade" id="myModal" role="dialog">
+						<div class="modal-dialog modal-md">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">DELETE ACCOUNT</h4>
+								</div>
+								<div class="modal-body">
+									<p>Are you sure you want to delete {{ product.name }}   record from the list of product?</p>
+								</div>
+								<div class="modal-footer">
+									<a href="{{ path('nestle_web_product_delete', {'id': product.id}) }}" class="btn btn-danger">Delete</a>
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+{% endblock %}
+

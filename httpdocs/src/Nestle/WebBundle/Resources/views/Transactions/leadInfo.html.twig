@@ -1,0 +1,122 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/dataTables.colVis.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all" />
+{% endblock %}
+
+{% set user_role = user.level %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+	    	<h1 class="modal-title">SALES REPORT DETAILS</h1>
+	    </div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<ol class="breadcrumb">
+				<li><a href="{{ path('nestle_web_homepage') }}">Transactions</a></li>
+				<li>Report from {{ txn.nestleBower.fname }} {{ txn.nestleBower.lname }}</li>
+			</ol>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 col-sm-12">
+			<div class="panel panel-default notifications report">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-6 col-md-12 col-sm-12">
+							<div class="alert alert-success" role="alert">
+								<h2 class="title">REPORT DATE:</h2><p>{{ txn.date|date('F j, Y g:i A') }}</p>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-12 col-sm-12">
+							<div class="alert alert-warning" role="alert">
+								<h2 class="title">TOTAL SALES:</h2> <p>PHP {{ txn.totalSales|number_format(2, '.', ',') }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% if invoices %}
+		{% for i in invoices %}
+			<div class="row">
+				<div class="col-md-12">
+					<div id="restos" class="panel invoice">
+						<div class="panel-body">
+
+							<div class="row invoiceDetails">
+								<div class="col-sm-3 rightBorder">
+									<h1 class="title head">SOLD TO:</h1>
+									{% if i.nestleBowerInvoices.id == 1 %}
+										<p class="detail">{{ i.nestleBowerInvoices.soldTo }} (Walk-in)</p>
+									{% else %}
+										<p class="detail">{{ i.nestleBowerInvoices.nestleBowerAccountsMcp.name }}</p>
+									{% endif %}
+								</div>
+								<div class="col-sm-3 rightBorder">
+									<h1 class="title head">AREA:</h1>
+									<p class="detail">{{ i.nestleBowerInvoices.nestleBowerAccountsMcp.nestleBowerArea.area }}</p>
+								</div>
+								<div class="col-sm-3 rightBorder">
+									<h1 class="title head" >INVOICE ID:</h1>
+									<p class="detail">{{ i.nestleBowerInvoices.receiptId }}</p>
+								</div>
+								<div class="col-sm-3">
+									<h1 class="title head">TRANSACTION DATE:</h1>
+									<p class="detail">{{ i.nestleBowerInvoices.invoiceDate }}</p>
+								</div>
+							</div>
+
+							<table class="table table-striped table-responsive">
+								<thead>
+									<tr>
+										<th>Product</th>
+										<th>Unit Price</th>
+										<th>Quantity</th>
+										<th>Total Sale</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for it in items[i.id] %}
+										<tr>
+											<td>{{ it.nestleBowerProduct.name }}</td>
+											<td>{{ it.unitPrice|number_format(2, '.', ',') }}</td>
+											<td>{{ it.qty }}</td>
+											<td>{{ it.totalSales|number_format(2, '.', ',') }}</td>
+										</tr>
+									{% endfor %}
+									<tr>
+										<td></td>
+										<td></td>
+										<td class="totLabel" style="font-weight: bold; font-size: 18px;">TOTAL</td>
+										<td class="totLabel" style="font-weight: bold; font-size: 18px;">{{ i.nestleBowerInvoices.sales|number_format(2, '.', ',') }}</td>
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+{% endblock %}

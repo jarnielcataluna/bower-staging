@@ -1,0 +1,136 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% set user_role = user.level %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/dataTables.colVis.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+		<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+			<div class="panel">
+				<div class="panel-body">
+
+					<ol class="breadcrumb">
+						<li><a href="{{ path('nestle_web_promo') }}">Promotions</a></li>
+						<li class="active">View</li>
+					</ol>
+
+
+					<div class="modal-header" id="addProfile">
+						<div class="form-group">
+							<label for="pwd" for="promo">Promo Name:</label>
+						    <span>{{ promo.name }}</span>
+						  </div>
+					</div>
+
+					<div class="modal-body restaurantProfile" id="addProfile">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label for="status">Status:</label>
+
+											{% if promo.status == 1 %}
+                                                <span>Active</span>
+                                            {% else %}
+                                                <span>Inactive</span>
+                                            {% endif %}
+
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label for="start">Start Date:</label>
+										<span>{{ rule.startDate }}</span>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label for="end">End Date:</label>
+										<span>{{ rule.endDate }}</span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label for="desc">Description:</label>
+
+										<div>{{ promo.description }}</div>
+									</div>
+								</div>
+							</div>
+
+							<hr>
+
+
+							<div class="row">
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label for="product_id">Product:</label>
+										<div>{{ product.name }}</div>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label for="qualifier">Qty. Qualify:</label>
+										<div>{{ rule.qtyToQualify }}</div>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label for="pwd">Promo Product:</label>
+                                        <div>{{ promoproduct.name }}</div>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label for="free">Qty. Free:</label>
+										<div>{{ rule.qtyFree }}</div>
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+						 <div class="form-footer">
+						<a href="{{ path('nestle_web_promo_edit', {'id':  promo.id }) }}" class="btn btn-warning">Edit</a>
+						<button class="btn btn-danger" data-toggle="modal"  data-target="#myModal" type="button" onclick="">Delete</button>
+					</div>
+					<div class="modal fade" id="myModal" role="dialog">
+						<div class="modal-dialog modal-md">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">DELETE PROMO</h4>
+								</div>
+								<div class="modal-body">
+									<p>Are you sure you want to delete <strong>{{ promo.name }}</strong> record from the list of promo?</p>
+								</div>
+								<div class="modal-footer">
+									<a href="{{ path('nestle_web_promo_delete', {'id': promo.id}) }}" class="btn btn-danger">Delete</a>
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+{% endblock %}
+

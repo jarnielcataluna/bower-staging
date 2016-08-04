@@ -1,0 +1,267 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/dataTables.colVis.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all" />
+{% endblock %}
+
+
+{% set user_role = user.level %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="table-alert"></div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th colspan="2">Distributor</th>
+            </tr>
+            </thead>
+            <tbody id="distributors-container">
+
+            </tbody>
+        </table>
+
+        <button id="add-distributor" class="btn btn-success"><i class="fa fa-plus"></i> Add Distributor</button>
+
+
+        <!--- Add/Edit Modal -->
+        <div class="modal fade" id="manage-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="POST" id="manage-distributor" action="{{ path('nestle_web_distributor_manage') }}">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="manage-modal-label">Manage User</h4>
+                        </div>
+
+                        <div class="modal-body">
+
+                            <div id="manage-alert"></div>
+
+                            <input type="hidden" id="manage-type" name="type">
+                            <input type="hidden" id="manage-id" name="id">
+
+                            <div class="form-group">
+                                <label for="manage-distid"> Distributor ID </label>
+                                <input type="text" name="id" id="manage-distid" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="manage-name"> Distributor name </label>
+                                <input type="text" name="name" id="manage-name" class="form-control" required>
+                            </div>
+
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" id="manage-submit" class="btn btn-success">Save</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--- Delete Modal -->
+        <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="">Delete User</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div id="delete-alert"></div>
+                        Do you really want to delete <strong id="delete-name"></strong> ?
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="delete-confirm" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+
+        'use strict';
+        var distributors = [];
+        var limit = 20;
+        var offset = 0;
+        var search = '';
+        var tableContainer = $('#distributors-container');
+        var deleteName = $('#delete-name');
+        var deleteModal = $('#delete-modal');
+        var manageModal = $('#manage-modal');
+        var deleteConfirm = $('#delete-confirm');
+        var addUser = $('#add-distributor');
+        var managetype = $('#manage-type');
+        var manageForm = $('#manage-distributor');
+        var manageModalLabel = $('#manage-modal-label');
+
+        $(document).ready(function () {
+            init();
+            addUser.click(function () {
+                managetype.val('new');
+                manageModalLabel.html('Add User');
+                manageForm.trigger('reset');
+                manageModal.modal('show');
+            });
+
+        });
+
+        function init() {
+            fetchDistributors();
+        }
+
+        function fetchDistributors() {
+            clearUserTable();
+            $.get('{{ path('nestle_web_distributor_fetch_list') }}', null, function (data) {
+                distributors = data;
+            }, 'json').done(function () {
+                appendUserTable(distributors);
+                bindClick();
+            });
+        }
+
+        function appendUserTable(data) {
+
+            for (var x = 0; x < data.length; x++) {
+                var appendItem = '<tr class="user-view" id="user-' + data[x].id + '" data-index="' + x + '" >' +
+                        '<td class="distributor-id">' + data[x].distributor_id + '</td>' +
+                        '<td class="distributor">' + data[x].distributor + '</td>' +
+                        '<a class="btn btn-sm btn-success edit-user" data-index="' + x + '" ><i class="fa fa-edit"></i></a>' +
+                        '<a class="btn btn-sm btn-danger delete-user" data-index="' + x + '" ><i class="fa fa-close"></i></a>' +
+                        '</td>' +
+                        '</tr>';
+
+
+                tableContainer.append(appendItem);
+            }
+        }
+
+        function clearUserTable() {
+            tableContainer.find('tr').remove();
+        }
+
+        function bindClick() {
+
+            var viewUser = $('.user-data');
+            var editUser = $('.edit-user');
+            var deleteUser = $('.delete-user');
+
+            viewUser.click(function () {
+                var _this = $(this);
+                var index = _this.data('index');
+                var currentUser = users[index];
+                console.log(currentUser);
+            });
+
+            deleteUser.click(function () {
+                var _this = $(this);
+                var index = _this.data('index');
+                var currentUser = users[index];
+                console.log('working');
+                deleteModal.find('#delete-name').html(currentUser.username);
+                deleteModal.find('#delete-confirm').attr('data-id', currentUser.id);
+                deleteModal.modal('show');
+
+            });
+
+            deleteConfirm.click(function () {
+                var id = $(this).data('id');
+                console.log('id');
+                $.get('{{ path('nestle_web_distributor_delete') }}', {id: id}, function (data) {
+                    if (data.response == 'success') {
+                        deleteModal.modal('hide');
+                        deleteModal.find('#delete-confirm').removeAttr('data-id');
+                        showAlert('success', $('#table-alert'), 'successfully deleted user');
+                        fetchUsers();
+                    }else{
+                        showAlert('danger', $('#delete-alert'), data.response);
+                    }
+                }, 'json');
+            });
+
+            editUser.click(function(){
+                var _this = $(this);
+                var index = _this.data('index');
+                var currentUser = users[index];
+                $('#manage-type').val('edit');
+                $('#manage-distid').val(currentUser.id);
+                $('#manage-id').val(currentUser.id);
+                $('#manage-name').val(currentUser.name);
+                manageModalLabel.html('Edit User');
+                manageModal.modal('show');
+            });
+        }
+
+
+        manageForm.submit(function (e) {
+            e.preventDefault();
+
+            var that = $(this),
+                    url = that.attr('action'),
+                    type = that.attr('method'),
+                    data = {};
+
+            that.find('[name]').each(function (index, value) {
+                var that = $(this),
+                        name = that.attr('name');
+                data[name] = that.val();
+            });
+
+            $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                dataType: 'json',
+
+                success: function (data) {
+                    console.log(data);
+                    if (data.response == 'success') {
+                        fetchUsers();
+                        manageModal.modal('hide');
+                        showAlert('success', $('#table-alert'), 'successfully updated users');
+                    } else {
+                        showAlert('danger', $('#manage-alert'), data.response);
+                    }
+                }
+            });
+
+            e.preventDefault();
+            return false;
+
+
+        });
+
+
+        function showAlert(type, element, message){
+            var alert = '<div class="alert alert-' + type + ' fade in">'+
+                    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+                    + message +
+                    '</div>';
+
+            element.append($(alert));
+        }
+
+
+    </script>
+{% endblock %}
+

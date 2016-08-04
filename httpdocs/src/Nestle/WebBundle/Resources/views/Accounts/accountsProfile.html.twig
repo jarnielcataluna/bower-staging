@@ -1,0 +1,169 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% set user_role = user.level %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/dataTables.colVis.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all" />
+{% endblock %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+			<div class="panel">
+				<div class="panel-body">
+
+					<ol class="breadcrumb">
+						<li><a href="{{ path('nestle_web_account_leads') }}">Accounts</a></li>
+						<li class="active">Profile</li>
+					</ol>
+
+					<div class="modal-header" id="addProfile">
+						<h1 class="modal-title" id="myModalLabel">{{ account.name }}</h1>
+					</div>
+
+					<div class="modal-body restaurantProfile" id="addProfile">
+
+						<form role="form">
+							<div class="row">
+								<div class="col-sm-3">
+									<label>Status:</label>
+									<span>
+										{% if account.status == 1 %}
+											Active
+										{% elseif account.status == 0 %}
+											Inactive
+										{% endif %}
+									</span>
+								</div>
+								<div class="col-sm-3">
+									<label>Category:</label>
+									<span>{{ account.nestleBowerCategory.category }}</span>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="pwd">Bower:</label>
+										<span>{{ bowerAssigned.nestleBower.fname }} {{ bowerAssigned.nestleBower.lname }}</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<label for="pwd">Contact Person:</label>
+									<span>{{ account.contactPerson }}</span>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="pwd">Contact No.:</label>
+										<span>{{ account.contactNumber }}</span>
+									</div>
+								</div>
+							</div>
+
+							<hr>
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="pwd">Region:</label>
+										<span>{{ region.region }}</span>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="pwd">Province:</label>
+										<span>{{ province.province }}</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="pwd">City:</label>
+										<span>{{ account.nestleBowerCity.city }}</span>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="pwd">Area:</label>
+										<span>{{ account.nestleBowerArea.area }}</span>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label for="pwd">Street Address:</label>
+										<span>{{ account.address }}</span>
+									</div>
+								</div>
+							</div>
+
+							<hr>
+
+							<div class="row">
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label for="pwd">Best From:</label>
+										<span>{{ account.bestFrom }}</span>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<label for="pwd">Best To:</label>
+									<span>{{ account.bestTo }}</span>
+								</div>
+								<div class="col-sm-3">
+									<label for="pwd">Bracket No.:</label>
+									<span>
+										{{ day }}
+									</span>
+								</div>
+								<div class="col-sm-3">
+									<label for="pwd">Frequency:</label>
+									<span>{{ account.frequency }}</span>
+								</div>
+							</div>
+							<hr>
+						</form>
+						<div class="form-footer">
+							<a href="{{ path('nestle_web_account_leads_profile_edit', {'id':  account.id }) }}" class="btn btn-warning">Edit</a>
+							<button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Delete</button>
+						</div>
+						<div class="modal fade" id="myModal" role="dialog">
+			                <div class="modal-dialog modal-md">
+			                    <div class="modal-content">
+			                        <div class="modal-header">
+			                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+			                            <h4 class="modal-title">DELETE ACCOUNT</h4>
+			                        </div>
+			                        <div class="modal-body">
+			                            <p>Are you sure you want to delete {{ account.name }} record from the list of accounts?</p>
+			                        </div>
+			                        <div class="modal-footer">
+			                            <a class="btn btn-danger" href="{{ path('nestle_web_account_delete', {'id': account.id}) }}">Delete</a>
+			                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			                        </div>
+			                    </div>
+			                </div>
+    					</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+{% endblock %}

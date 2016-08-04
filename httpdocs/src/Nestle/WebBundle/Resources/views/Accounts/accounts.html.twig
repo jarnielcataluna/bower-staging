@@ -1,0 +1,203 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% set user_role = user.level %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% include 'NestleWebBundle:Misc:notifications.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="modal-title">ACCOUNTS MANAGEMENT</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="restos" class="panel">
+                <div class="panel-body" id="accountsTableHolder">
+                    <div class="tableButtons"></div>
+                    <table class="table table-striped table-responsive leadsTable" id="leadsTable">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Area</th>
+                            <th>City</th>
+                            <th>Province</th>
+                            <th>Region</th>
+                            <th>Day</th>
+                            <th>Bower Name</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr class="noExl">
+                            <th>Name</th>
+                            <th>Area</th>
+                            <th>City</th>
+                            <th>Province</th>
+                            <th>Region</th>
+                            <th>Day</th>
+                            <th>Bower Name</th>
+                            <th>Status</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for acc in accounts %}
+                            <tr id="infoOpen" data-id="{{ acc.id }}">
+                                <td>{{ acc.name }}</td>
+                                <td>{{ acc.area }}</td>
+                                <td>{{ acc.city }}</td>
+                                <td>{{ acc.province }}</td>
+                                <td>{{ acc.region }}</td>
+                                <td>{{ acc.day }}</td>
+                                <td>{{ acc.bower }}</td>
+                                <td>{{ acc.status }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">IMPORT ACCOUNTS LIST</h4>
+                </div>
+                <form action="{{ path('nestle_web_account_import_data') }}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+
+
+                        <p>Select CSV file to import</p>
+                        <input id="input-csv" type="file" class="file" required="required" name="accountsImport">
+                        <br>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-warning" id="importBtn">Import</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/fileinput.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.table2excel.js') }}"></script>
+    <script>
+        $("#input-csv").fileinput({
+
+            'showUpload': true,
+            'previewFileType': 'text',
+            'allowedFileExtensions': ['csv'],
+            'showPreview': false,
+            'showRemove': true,
+            'initialPreviewShowDelete': true
+        });
+
+        $(function () {
+
+            var table = $('#leadsTable').DataTable({
+
+                oLanguage: {
+                    sEmptyTable: "No records found",
+                    sSearch: ''
+                },
+                oTableTools: {
+                    "sSwfPath": "/admin/swf/copy_csv_xls_pdf.swf",
+                    "aButtons": ["csv"]
+                },
+                iDisplayLength: 10,
+                aLengthMenu: [[10, 20, 50, 100, 200, 500, 1000, -1], [10, 20, 50, 100, 200, 500, 1000, "Show All"]],
+                bPaginate: true,
+                bLengthChange: true,
+                aaSorting: [],
+                fnDrawCallback: function () {
+                    $('tr[id="infoOpen"]').click(function () {
+                        var id = $(this).attr('data-id');
+
+                        $(this).unbind().click();
+                        $(this).bind().click();
+
+                        window.location.href = "accounts/profile/" + id;
+
+                        $('tr').each(function () {
+                            $(this).unbind().click();
+                        });
+                    });
+
+
+                    $('button[id=importCsv]').click(function () {
+                        $('#myModal').modal('show');
+                    });
+
+                    $('button[id=exportCsv]').click(function () {
+                        console.log('huhu');
+                        var today = new Date();
+                        today.toISOString().substring(0, 10);
+
+                        $("#leadsTable").table2excel({
+                            exclude: ".noExl",
+                            name: "MCP LIST",
+                            filename: "product-list-" + today.toISOString().substring(0, 10),
+                            fileext: ".xls",
+                            exclude_img: true,
+                            exclude_links: true,
+                            exclude_inputs: true
+                        });
+                    });
+                },
+
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var select = $('<select class="form-control"><option value="">All</option></select>')
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                            $(this).val()
+                                    );
+
+                                    column
+                                            .search(val ? '^' + val + '$' : '', true, false)
+                                            .draw();
+                                });
+
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                }
+
+
+            });
+        });
+
+        $('#flashNotif').fadeOut(50000);
+        $("div.tableButtons").html('<a href="{{ path('nestle_web_account_leads_add') }}" class="btn btn-warning">ADD ACCOUNT</a><button class="btn btn-warning" id="importCsv">IMPORT MCP LIST</button><button class="btn btn-warning" id="exportCsv">EXPORT MCP LIST</button><a href="{{ asset("downloads/csv/mcp-upload-template.csv") }}" download class="btn btn-warning" >DOWNLOAD IMPORT TEMPLATE</a>');
+    </script>
+{% endblock %}

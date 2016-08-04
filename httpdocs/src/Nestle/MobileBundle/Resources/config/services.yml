@@ -1,0 +1,4 @@
+services:
+#    nestle_mobile.example:
+#        class: Nestle\MobileBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

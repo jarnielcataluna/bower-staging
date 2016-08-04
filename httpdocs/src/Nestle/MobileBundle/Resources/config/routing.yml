@@ -1,0 +1,32 @@
+nestle_mobile_bower_login:
+    path:     /bower/login
+    defaults: { _controller: NestleMobileBundle:Main:bowerLogin }
+
+nestle_mobile_bower_accounts:
+    path:     /bower/accounts
+    defaults: { _controller: NestleMobileBundle:Main:retrieveMcp }
+
+nestle_mobile_bower_products:
+    path:     /bower/products
+    defaults: { _controller: NestleMobileBundle:Main:retrieveProducts }
+
+nestle_mobile_bower_promo:
+    path:     /bower/promos
+    defaults: { _controller: NestleMobileBundle:Main:retrievePromo }
+
+nestle_mobile_bower_invoice_callback:
+    path:     /bower/invoice/callback
+    defaults: { _controller: NestleMobileBundle:Main:receiveSalesReport }
+
+nestle_mobile_bower_account_block:
+    path:     /bower/login/block
+    defaults: { _controller: NestleMobileBundle:Main:blockAccountLogin }
+
+nestle_mobile_bower_forgot_password:
+    path:     /bower/login/forgot-password
+    defaults: { _controller: NestleMobileBundle:Main:forgotPassword }
+
+nestle_mobile_bower_cycle_plan:
+    path:     /bower/cycle-plan
+    defaults: { _controller: NestleMobileBundle:Main:retrieveCyclePlan }
+

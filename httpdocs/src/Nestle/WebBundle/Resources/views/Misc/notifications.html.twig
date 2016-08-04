@@ -1,0 +1,11 @@
+
+{% for flash in app.session.flashbag.get('error') %}
+    <div id="flashNotif" style="cursor:pointer;" class="alert alert-danger">
+        {{ flash }}
+    </div>
+{% endfor %}
+{% for flash in app.session.flashbag.get('notice') %}
+    <div id="flashNotif" style="cursor:pointer;" class="alert alert-success">
+        {{ flash }}
+    </div>
+{% endfor %}

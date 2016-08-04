@@ -1,0 +1,25 @@
+nestle_web:
+    resource: "@NestleWebBundle/Resources/config/routing.yml"
+    prefix:   /
+
+nestle_mobile:
+    resource: "@NestleMobileBundle/Resources/config/routing.yml"
+    prefix:   /mobile
+
+nestle_core:
+    resource: "@NestleCoreBundle/Resources/config/routing.yml"
+
+login:
+    pattern: /login{trailingSlash}
+    defaults: { _controller: NestleCoreBundle:Core:login, trailingSlash : "/" }
+    requirements: { trailingSlash : "[/]{0,1}" }
+
+_security_check:
+    pattern: /login_check
+
+logout:
+    pattern: /logout
+
+error403:
+    pattern: /forbidden
+    defaults: { _controller: NestleCoreBundle:Core:forbidden }

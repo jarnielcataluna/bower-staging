@@ -1,0 +1,79 @@
+<table id="leadsTable" class="table leadsTable">
+	<thead>
+		<tr>
+			<th>Date Submitted</th>
+            <th>Bower ID</th>
+			<th>Bower</th>
+			<th>Sales</th>
+			<th>SKUs Sold</th>
+			<th>Invoices Issued</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		
+	</tbody>
+</table>
+
+<script>
+	$(function() {
+        var start = $("#startDate").val();
+        var end = $("#endDate").val();
+        var _bow = $('#bowerId').val();
+
+        console.log(start);
+        console.log(end);
+
+        if (_bow == '') {
+        	_bow = "{{ bow }}"
+        }
+
+        var table = $('#leadsTable').DataTable({
+        	"dom":'<"searchBox row" <"col-md-12" lB>> <"row" <"break">> <"row" <"tableButtons">> rt<"bottom"ip><"clear">',
+            oLanguage: {
+                sEmptyTable: "No records found"
+            },
+            processing: true,
+            serverSide: true,
+            ajax: {
+            	url: '{{ path("nestle_web_leads_data_table_ajax") }}',
+                type: 'GET',
+                data: {
+                	bow: _bow,
+                    startDate: start,
+                    endDate: end
+                }
+            },
+            colVis: {
+                exclude: [0],
+                restore: "Restore to default",
+                showAll: "Show all",
+                showNone: "Show none"
+            },
+            oTableTools: {
+                "sSwfPath" : "/admin/swf/copy_csv_xls_pdf.swf",
+                "aButtons": [ "csv" ]
+            },
+            iDisplayLength: 10,
+            aLengthMenu: [[10, 20, 50, 100, 200, 500, 1000, -1], [10, 20, 50, 100, 200, 500, 1000, "Show All"]],
+            bPaginate: true,
+            bLengthChange: true,
+            aaSorting: [[0, 'desc']],
+            bStateSave: true,
+            fnDrawCallback: function() {
+                $('tr[id="infoOpen"]').click(function() {
+                    var id = $(this).attr('data-id');
+
+                    $(this).unbind().click();
+                    $(this).bind().click();
+
+			        window.location.href = "/web/sales/transaction/"+id;
+                    
+                    $('tr').each(function() {
+                        $(this).unbind().click();
+                    });
+                });
+            }
+        });
+	});
+</script>

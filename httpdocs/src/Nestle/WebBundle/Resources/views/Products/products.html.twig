@@ -1,0 +1,210 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/fileinput.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+{% set user_role = user.level %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% include 'NestleWebBundle:Misc:notifications.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="modal-title">PRODUCT MANAGEMENT</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="restos" class="panel">
+                <div class="panel-body" id="accountsTableHolder">
+                    <div class="tableButtons"></div>
+                    <table class="table table-striped table-responsive leadsTable" id="productsTable">
+                        <thead>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr class="noExl">
+                            <th>SKU</th>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                        </tfoot>
+
+                        <tbody>
+                        {% for d in data %}
+                            <tr id="infoOpen" data-id="{{ d.id }}">
+                                <td>{{ d.sku }}</td>
+                                <td>{{ d.name }}</td>
+                                <td>{{ d.brand }}</td>
+                                <td>{{ d.category }}</td>
+                                <td>{{ d.type }}</td>
+                                <td>{{ d.status }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">IMPORT CSV</h4>
+                </div>
+                <form action="{{ path('nestle_web_product_import_data') }}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <p>Select CSV file to import</p>
+                        <input id="input-id2" type="file" class="file" name="product_csv">
+                        <br>
+
+                        <p>Select file for product images</p>
+                        <input id="input-id" type="file" class="file" name="product_images[]" multiple>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-warning" id="importBtn">Import</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/fileinput.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.table2excel.js') }}"></script>
+    <script>
+
+
+        function exportTable(){
+
+                console.log('huhu');
+
+                var today = new Date();
+                today.toISOString().substring(0, 10);
+
+                $("#productsTable").table2excel({
+                    exclude: ".noExl",
+                    name: "MCP LIST",
+                    filename: "product-list-" + today.toISOString().substring(0, 10),
+                    fileext: ".xls",
+                    exclude_img: true,
+                    exclude_links: true,
+                    exclude_inputs: true
+                });
+
+        }
+
+        $("#input-id").fileinput({
+            'showUpload': false,
+            'previewFileType': 'text',
+            'allowedFileExtensions': ['jpg', 'png'],
+            'previewSettings': {
+                image: {width: "100px", height: "100px"}
+            },
+            'showRemove': true,
+            'initialPreviewShowDelete': true
+        });
+
+        $("#input-id2").fileinput({
+            'showUpload': false,
+            'previewFileType': 'text',
+            'allowedFileExtensions': ['csv'],
+            'showPreview': false,
+            'showRemove': true,
+            'initialPreviewShowDelete': true
+        });
+
+        $(function() {
+
+            var table = $('#productsTable').DataTable({
+                aLengthMenu: [[25, 50, 100, 250], [25, 50, 100, 250]],
+                oLanguage: {
+                    sSearch: ''
+                },
+                iDisplayLength: 10,
+                bPaginate: true,
+                bLengthChange: true,
+                aaSorting: [[0, 'desc']],
+
+                fnDrawCallback: function () {
+                    $('tr[id="infoOpen"]').click(function () {
+                        var id = $(this).attr('data-id');
+
+                        $(this).unbind().click();
+                        $(this).bind().click();
+
+                        window.location.href = "product/view/" + id;
+
+                        $('tr').each(function () {
+                            $(this).unbind().click();
+                        });
+                    });
+
+
+
+
+                    $('button[id=importCsv]').click(function () {
+                        $('#myModal').modal('show');
+                    });
+
+
+                },
+
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var select = $('<select class="form-control"><option value="">All</option></select>')
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                            $(this).val()
+                                    );
+
+                                    column
+                                            .search(val ? '^' + val + '$' : '', true, false)
+                                            .draw();
+                                });
+
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                }
+
+            });
+
+            $("div.tableButtons").html('<a href="{{ path('nestle_web_product_add') }}" class="btn btn-info">ADD PRODUCT</a><button class="btn btn-info" data-toggle="modal" data-target="#myModal">IMPORT PRODUCT LIST</button><button id="exportCsv" onclick="exportTable();" class="btn btn-info">EXPORT PRODUCT LIST</button><a href="{{ asset("downloads/csv/product-upload-template.csv") }}" download class="btn btn-info" >DOWNLOAD IMPORT TEMPLATE</a>');
+        });
+        $('#flashNotif').fadeOut(2500);
+    </script>
+{% endblock %}

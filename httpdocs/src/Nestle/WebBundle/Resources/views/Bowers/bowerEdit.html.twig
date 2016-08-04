@@ -1,0 +1,296 @@
+{% extends 'NestleWebBundle::base.html.twig' %}
+
+{% set user_role = user.level %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/dataTables.colVis.css') }}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% include 'NestleWebBundle:Misc:notifications.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+            <div class="panel">
+                <div class="panel-body">
+
+                    <ol class="breadcrumb">
+                        <li><a href="{{ path('nestle_web_bower') }}">Bower</a></li>
+                        <li><a href="{{ path('nestle_web_bower_profile', {'id': bower.id}) }}">Profile</a></li>
+                        <li class="active">Edit</li>
+                    </ol>
+                    <form role="form" method="POST">
+                        <div class="modal-header" id="addProfile">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label for="fname">First Name:</label>
+                                        <input type="text" class="form-control input-lg" id="fname" name="fname" value="{{ bower.fname }}">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="lname">Last Name:</label>
+                                        <input type="text" class="form-control input-lg" id="lname" name="lname" value="{{ bower.lname }}">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-body restaurantProfile" id="addProfile">
+
+                            <div class="row">
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="status">Status:</label>
+                                        <select name="status" class="form-control">
+                                            <option value="1" {% if bower.status == 1 %} selected {% endif %}>Active</option>
+                                            <option value="0" {% if bower.status == 0 %} selected {% endif %}>Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="status">Bower ID:</label>
+                                        <input type="text" name="bowerId" class="form-control" id="bowerId" value="{{ bower.bowerId }}" disabled>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="username">Username:</label>
+                                        <input type="text" class="form-control" name="username" value="{{ bower.username }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="password">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password" value="{{ bower.password }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="bdate">Birthdate:</label>
+                                        <input type="date" class="form-control" id="bdate" name="bdate" value="{{ bower.bdate }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="contact">Contact No.:</label>
+                                        <input type="text" class="form-control" id="contact" name="contact" value="{{ bower.contactnumber }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="distributor">Distributor:</label>
+                                        <input type="text" class="form-control" id="distributor" name="distributor" required="required" value="{{ bower.distributor }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="region">Region:</label>
+                                        <select class="form-control" name="region" id="region">
+                                            {% for r in allRegions %}
+                                                <option value="{{ r.id }}">{{ r.region }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="province">Province:</label>
+                                        <select class="form-control" id="province" name="province">
+                                            {% for p in allProvinces %}
+                                                <option value="{{ p.id }}">{{ p.province }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="city">City:</label>
+                                        <select class="form-control" id="city" name="city">
+                                            {% for c in allCities %}
+                                                <option value="{{ c.id }}">{{ c.city }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="area">Area:</label>
+                                        <select class="form-control" id="area" name="area">
+                                            {% for a in allAreas %}
+                                                <option value="{{ a.id }}">{{ a.area }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" id="new-area-container" style="display:none">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="pwd">New Area:</label>
+                                        <input type="text" name="new_area" class="form-control" id="new_area" required="required">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <hr>
+
+                            <button type="submit" class="btn btn-warning pull-right">Submit</button>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+
+    <script>
+
+        var cities = [];
+        var provinces = [];
+        var areas = [];
+
+
+
+
+        {% if allCities %}
+        {% for ac in allCities %}
+        var city = {"city": "{{ ac.city}}", "province_id": {{ ac.provinceId }}, "id": {{ ac.id }} };
+        cities.push(city);
+        {% endfor %}
+        {% endif %}
+
+        {% if allProvinces %}
+        {% for ap in allProvinces %}
+        var province = {"province": "{{ ap.province}}", "region_id": {{ ap.regionId }}, "id": {{ ap.id }} };
+        provinces.push(province);
+        {% endfor %}
+        {% endif %}
+
+        {% if allProvinces %}
+        {% for ar in allAreas %}
+        var area = {"area": "{{ ar.area}}", "city_id": {{ ar.cityId }}, "id": {{ ar.id }} };
+        areas.push(area);
+        {% endfor %}
+        {% endif %}
+
+        $('document').ready(function(){
+            changeProvince();
+            changeCity();
+            changeArea();
+            addNewArea();
+        });
+
+
+        $('#region').change(function(){
+            changeProvince();
+            changeCity();
+            changeArea();
+            addNewArea();
+        });
+
+
+        $('#province').change(function(){
+            changeCity();
+            changeArea();
+            addNewArea();
+        });
+
+        $('#city').change(function(){
+            changeArea();
+            addNewArea();
+        });
+
+        $('#area').change(function(){
+            addNewArea();
+        });
+
+
+        function changeArea(){
+            $("#area").find('option').remove().end();
+            for(var x = 0; x < areas.length; x++){
+                if($('#city').val() == areas[x]["city_id"]){
+                    $('<option>').val(areas[x]["id"]).text(areas[x]["area"]).appendTo('#area');
+                }
+
+            }
+
+            $('<option>').val(0).text('Add New Area').appendTo('#area');
+        }
+
+        function changeCity(){
+            $("#city").find('option').remove().end();
+            for(var x = 0; x < cities.length; x++){
+                if($('#province').val() == cities[x]["province_id"]){
+                    $('<option>').val(cities[x]["id"]).text(cities[x]["city"]).appendTo('#city');
+                }
+
+            }
+        }
+
+        function changeProvince(){
+            $("#province").find('option').remove().end();
+            for(var x = 0; x < provinces.length; x++){
+                if($('#region').val() == provinces[x]["region_id"]){
+                    $('<option>').val(provinces[x]["id"]).text(provinces[x]["province"]).appendTo('#province');
+                }
+
+            }
+        }
+
+        function addNewArea(){
+            if($('#area').val() != 0){
+                $('#new-area-container').hide();
+                $('#new_area').removeAttr('required');
+            }else{
+                $('#new-area-container').show();
+                $('#new_area').attr('required');
+            }
+        }
+    </script>
+
+    <script>
+        $('#flashNotif').fadeOut(5000);
+    </script>
+{% endblock %}
+

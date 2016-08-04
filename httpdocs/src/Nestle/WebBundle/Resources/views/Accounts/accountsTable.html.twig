@@ -1,0 +1,31 @@
+<div class="tableButtons"></div>
+<table class="table table-striped table-responsive leadsTable" id="leadsTable">
+	<thead>
+		<tr>
+		<th>Name</th>
+		<th>Area</th>
+		<th>City</th>
+		<th>Province</th>
+		<th>Region</th>
+		<th>Day</th>
+		<th>Bower Name</th>
+		<th>Status</th>
+		</tr>
+	</thead>
+
+	<tbody>
+        {% for acc in accounts %}
+            <tr id="info-open">
+                <td>{{ acc.name }}</td>
+                <td>{{ acc.area }}</td>
+                <td>{{ acc.city }}</td>
+                <td>{{ acc.province }}</td>
+                <td>{{ acc.region }}</td>
+                <td>{{ acc.day }}</td>
+                <td>{{ acc.bower }}</td>
+                <td>{{ acc.status }}</td>
+            </tr>
+		{% endfor %}
+	</tbody>
+</table>
+

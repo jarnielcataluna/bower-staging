@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Nestle BOW Web App</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+
+    {% block stylesheets %}
+    	<link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/metisMenu.min.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/fontello.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/linear-icons.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/Pe-icon-7-stroke.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/jasny-bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/summernote.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/ammap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/dataTables.colVis.css') }}" rel="stylesheet" type="text/css" media="all" />
+    	<link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" media="all" />
+	{% endblock %}
+</head>
+<body>
+	<div id="page-wrapper" style="padding-top: 30px;">
+		<div class="row">
+
+			<div class="col-sm-5 col-sm-offset-3 col-md-4 col-md-offset-4 loginBox" style="background: none;">
+
+				<div class="row">
+	                <div class="col-md-12">
+	                    <img src="{{ asset('img/bower_logo.png') }}" alt="" style="max-width: 50%" />
+	                </div>
+	            </div>
+
+	            <div class="row">
+	                <form action="{{ path('_security_check') }}" method="post" class="form-login" role="form" id="loginForm">
+	                	<div class="col-md-12">
+		                    <div class="input-group">
+		                        <span id="basic-addon" class="input-group-addon">
+		                            <i class="fa fa-user"></i>
+		                        </span>
+		                        <input class="form-control input-lg" name="_username" id="username" type="text" aria-describedby="basic-addon1" placeholder="Username">
+		                    </div>
+		                </div>
+
+		                <div class="col-md-12">
+		                    <div class="input-group">
+		                        <span id="basic-addon" class="input-group-addon">
+		                            <i class="fa fa-shield"></i>
+		                        </span>
+		                        <input class="form-control input-lg" name="_password" id="password" type="password" aria-describedby="basic-addon1" placeholder="Password">
+		                    </div>
+		                </div>
+
+		                <div class="col-md-12">
+		                    <button id="login" class="btn btn-info btn-lg" type="submit">LOGIN</button>
+							{#}<a href="#" data-toggle="modal" data-target="#recoverPw">FORGOT PASSWORD?</a>{#}
+							{% if error %}
+								<div class="alert alert-danger" role="alert">{{ error.message }}</div>
+							{% endif %}
+		                </div>
+	                </form>
+	            </div>
+
+			</div>
+
+		</div>
+	</div>
+
+	{% block javascript %}
+		<script src="{{ asset('js/jquery1.11.1.min.js') }}"></script>
+	    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+	    <script src="{{ asset('js/metisMenu.min.js') }}"></script>
+	    <script src="{{ asset('js/jqueryui.min.js') }}"></script>
+	    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+	    <script src="{{ asset('js/dataTables.colVis.min.js') }}"></script>
+	    <script src="{{ asset('js/summernote.js') }}"></script>
+	    <script src="{{ asset('js/sb-admin-2.js') }}"></script>
+	    <script src="{{ asset('js/jasny-bootstrap.js') }}"></script>
+	    <script src="{{ asset('js/equalheight.js') }}"></script>
+
+	    <script>
+
+			var login = $('#login');
+			login.prop('disabled', true);
+			check();
+
+			function check(){
+				var username = $('#username').val();
+				var password = $('#password').val();
+				if(username != '' && password != ''){
+					login.prop('disabled', false);
+				}else{
+					login.prop('disabled', true);
+				}
+			}
+
+			$('#username').change(function() {
+				check();
+			});
+
+			$('#password').change(function() {
+				check();
+			});
+
+
+	    	login.click(function(e) {
+	    		e.preventDefault();
+				$('#loginForm').submit();
+	    	});
+	    </script>
+	{% endblock %}
+</body>
+</html>
