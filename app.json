@@ -1,6 +1,6 @@
 {
-  "name": "Bower Staging",
-  "description": "A Staging Environment for the Bower Mobile Application Project",
-  "repository": "https://github.com/jarnielcataluna/bower-staging",
+  "name": "PHP Getting Started",
+  "description": "A barebones PHP app that makes use of the Silex web framework",
+  "repository": "https://github.com/heroku/php-getting-started",
   "addons": []
 }
